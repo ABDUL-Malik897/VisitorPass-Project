@@ -3,7 +3,7 @@ import { useAuthContext } from '../Hooks/useAuthContext'
 import { useVisitorsContext } from '../Hooks/useVisitorContext'
 import { useComplaintContext } from '../Hooks/useComplaintContext'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios';
+import api from '../api';
 import QRCode from 'react-qr-code'
 import "../index.css"
 import {format} from "date-fns"
@@ -49,7 +49,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
     useEffect(()=>{
         const fetchVisitors = async ()=>{
             try {
-                const response = await axios.get("/visitors")
+                const response = await api.get("/visitors")
                 visitorDispatch({
                     type : "SET_VISITOR",
                     payload : response.data
@@ -61,7 +61,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
         }
         const fetchComplaints = async () => {
             try{
-                const response = await axios.get("/complaints")
+                const response = await api.get("/complaints")
                 complaintDispatch({
                     type :"SET_COMPLAINT",
                     payload : response.data
@@ -78,7 +78,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
         const closeExpiredComplaints = async () => {
             if (currentComplaint && currentComplaint.Status ==="Resolved" && complaintExpired){
                 try{
-                    const response = await axios.patch(`/complaints/${currentComplaint._id}`,{Status : "Closed"})
+                    const response = await api.patch(`/complaints/${currentComplaint._id}`,{Status : "Closed"})
                     complaintDispatch({
                         type : "UPDATE_COMPLAINT",
                         payload : response.data
@@ -101,7 +101,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
                         (currentVisitor.Status === "Rejected" &&(new Date() - new Date(currentVisitor.updatedAt)) > (60 * 60 * 1000))
                     )
                 ){
-                const response = await axios.patch(`/visitors/${currentVisitor._id}`,{VisitEnd : true})
+                const response = await api.patch(`/visitors/${currentVisitor._id}`,{VisitEnd : true})
                 visitorDispatch({
                     type : "UPDATE_VISITOR",
                     payload : response.data
@@ -119,7 +119,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
 
     const handleCompleteVisit = async () => {
         try {
-            const response = await axios.patch(
+            const response = await api.patch(
                 `/visitors/${currentVisitor._id}`,{VisitEnd :true}
             )
             visitorDispatch({

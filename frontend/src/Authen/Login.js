@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from "../api"
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../Hooks/useAuthContext'
@@ -21,7 +21,7 @@ const Login = () => {
         e.preventDefault()
 
         try{
-            const response = await axios.post("/users/login",{
+            const response = await api.post("/users/login",{
                 email,
                 password
             })

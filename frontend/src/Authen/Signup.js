@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from '../api'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -16,7 +16,7 @@ const Signup = () => {
     const handleSubmit = async(e) =>{
         e.preventDefault()
         try{
-            const response = await axios.post('/users/signup',{name,email,password})
+            const response = await api.post('/users/signup',{name,email,password})
             console.log(response.data);
             localStorage.setItem(
                 "user", 

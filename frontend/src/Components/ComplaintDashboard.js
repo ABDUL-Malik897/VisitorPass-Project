@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../index.css"
@@ -9,7 +9,7 @@ const ComplaintDashboard = () =>{
     const navigate = useNavigate()
 
     const fetchComplaints = async () =>{
-        const response = await axios.get("/complaints")
+        const response = await api.get("/complaints")
         setComplaints(response.data)
     }
 
@@ -26,7 +26,7 @@ const ComplaintDashboard = () =>{
         if (status === "Resolved") {
             updateData.ResolvedAt = new Date()
         }
-        await axios.patch(`/complaints/${id}`,updateData)
+        await api.patch(`/complaints/${id}`,updateData)
         fetchComplaints()
     }
 

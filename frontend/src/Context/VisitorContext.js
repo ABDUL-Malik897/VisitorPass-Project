@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../api';
 const { createContext, useReducer, useEffect } = require("react");
 
 
@@ -43,7 +43,7 @@ export const VisitorContextProvider = ({children}) =>{
     useEffect(() => {
         const fetchVisitors = async () => {
             try {
-                const response = await axios.get("/visitors")
+                const response = await api.get("/visitors")
                 dispatch({
                     type: "SET_VISITOR",
                     payload: response.data

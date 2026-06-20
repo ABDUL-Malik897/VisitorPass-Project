@@ -1,5 +1,5 @@
 import { createContext, useReducer , useEffect } from "react";
-import axios from 'axios'
+import api from '../api'
 
 export const ComplaintContext  = createContext()
 
@@ -31,7 +31,7 @@ export const ComplaintContextProvider = ({children}) => {
     useEffect(() => {
         const fetchComplaints = async () => {
             try {
-                const response = await axios.get("/complaints");
+                const response = await api.get("/complaints");
 
                 dispatch({
                     type: "SET_COMPLAINT",

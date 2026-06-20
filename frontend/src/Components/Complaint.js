@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api";
 import React ,{ useState } from "react";
 import { useAuthContext } from "../Hooks/useAuthContext";
 import { useComplaintContext } from "../Hooks/useComplaintContext";
@@ -29,7 +29,7 @@ const Complains = () =>{
         }
         try{
             setLoading(true)
-            const response = await axios.post("/complaints",complaint)
+            const response = await api.post("/complaints",complaint)
             dispatch({
                 type : "CREATE_COMPLAINT",
                 payload : response.data

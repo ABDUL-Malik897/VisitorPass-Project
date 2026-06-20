@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import {  Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../Hooks/useAuthContext";
 import { useVisitorsContext } from "../Hooks/useVisitorContext";
-import axios from "axios";
 import { useComplaintContext } from "../Hooks/useComplaintContext";
 import "../index.css"
 import heroImage from "../Image/ChatGPT Image Jun 11, 2026, 09_48_07 AM.png"
+import api from "../api";
 
 const Navbar = ({setShowProfile}) => {
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Navbar = ({setShowProfile}) => {
     
     useEffect(() => {
     const fetchVisitors = async () => {
-    const response = await axios.get("/visitors")
+    const response = await api.get("/visitors")
     visitorDispatch({
         type: "SET_VISITOR",
         payload: response.data

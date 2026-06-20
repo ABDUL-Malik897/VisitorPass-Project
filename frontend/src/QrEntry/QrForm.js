@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from "axios"
+import api from "../api"
 import { useAuthContext } from '../Hooks/useAuthContext'
 import { useVisitorsContext } from '../Hooks/useVisitorContext'
 import { useNavigate } from 'react-router-dom'
@@ -53,7 +53,7 @@ const QrForm = () => {
         }
         try {
             setLoading(true)
-            const response = await axios.post("/visitors", visitor)
+            const response = await api.post("/visitors", visitor)
             dispatch({
             type: "CREATE_VISITOR",
             payload: response.data

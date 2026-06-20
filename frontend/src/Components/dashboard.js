@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import api from "../api";
 import { useVisitorsContext } from "../Hooks/useVisitorContext";
 import emailjs from '@emailjs/browser';
 import QRCode from 'qrcode';
@@ -18,7 +18,7 @@ const Dashboard = () => {
 
     const fetchVisitors = useCallback(async() =>{
             try{
-                const response = await axios.get("/visitors")
+                const response = await api.get("/visitors")
                 dispatch({type : 'SET_VISITOR' , payload : response.data})
             }catch(error){
                 console.log(error);
@@ -32,7 +32,7 @@ const Dashboard = () => {
     const handleApproval = async (id) => {
     try{
         setLoadingState({id , action : "approve"})
-        await axios.patch(`/visitors/${id}`,{
+        await api.patch(`/visitors/${id}`,{
             Status:"Approved"
         })
         const approvedVisitor = visitors.find((v)=> v._id === id)
@@ -68,7 +68,7 @@ const Dashboard = () => {
         const handleReject = async (id) => {
         try{
             setLoadingState({ id : null , action : "reject"})
-            await axios.patch(`/visitors/${id}`,{
+            await api.patch(`/visitors/${id}`,{
             Status:"Rejected"
         })
         await fetchVisitors()
