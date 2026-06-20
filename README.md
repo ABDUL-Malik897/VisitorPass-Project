@@ -83,28 +83,6 @@ Reports include:
 
 ---
 
-## Project Structure
-
-frontend/
-├── src/
-│ ├── Authen/
-│ ├── Components/
-│ ├── Context/
-│ ├── Hooks/
-│ ├── Image/
-│ ├── pages/
-│ ├── QrEntry/
-│ └── App.js
-
-backend/
-├── controllers/
-├── middleware/
-├── models/
-├── routes/
-├── server.js
-└── .env
-
----
 
 ## Authentication
 
