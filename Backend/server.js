@@ -13,7 +13,8 @@ dotenv.config()
 //expess app
 const app = express()
 
-app.use(cors())
+app.use(cors({origin : "https://visitor-pass-project-x669.vercel.app",
+    credentials : true}))
 app.use(express.json())
 
 
