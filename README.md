@@ -1,158 +1,233 @@
-# VisitorPass - Visitor Pass Management System
+# VisitorPass – Smart Visitor Management System
 
-## Overview
+<p align="center">
+  <img src="frontend/src/Image/VisitorPass-logo.png" alt="VisitorPass Logo" width="180"/>
+</p>
 
-VisitorPass is a full-stack MERN application designed to digitize and streamline visitor management for offices, colleges, residential societies, and organizations.
-
-The system allows users to register visitor requests, generate QR-based visitor passes, track request status, submit complaints, and receive approval updates. Administrators can review visitor requests, approve or reject entries, manage complaints, and view analytical reports.
-
----
-
-## Features
-
-### User Features
-
-* User Registration & Login
-* JWT Authentication
-* Generate Visitor Entry Requests
-* QR Code Generation for Approved Requests
-* Real-Time Request Status Tracking
-* Complaint Submission System
-* Complaint Status Monitoring
-* Profile Dashboard
-* Automatic QR Expiry Handling
-* Visit Completion Tracking
-
-### Admin Features
-
-* Secure Admin Dashboard
-* Approve Visitor Requests
-* Reject Visitor Requests
-* Mark Visits as Completed
-* Manage User Complaints
-* Update Complaint Status
-* View Visitor Reports
-* Search Visitors
-* Search Complaints
-* Visitor Analytics
+<p align="center">
+  <b>A Secure MERN Stack Visitor Management System with QR-Based Entry, Role-Based Authentication, Employee Approval, Complaint Management, Security Check-In/Check-Out, Analytics, and Reports.</b>
+</p>
 
 ---
 
-## Dashboard Statistics
+# Table of Contents
 
-The admin dashboard provides:
-
-* Total Visitors
-* Pending Requests
-* Approved Requests
-* Rejected Requests
-* Pending Complaints
-
-Reports include:
-
-* Today's Visitors
-* Weekly Visitor Count
-* Most Common Visit Purpose
-* Most Common Complaint Type
-
----
-
-## Tech Stack
-
-### Frontend
-
-* React.js
-* React Router DOM
-* Axios
-* Context API
-* useReducer
-* CSS3
-
-### Backend
-
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* JWT Authentication
-* bcrypt
-
-### Database
-
-* MongoDB Atlas
+- Overview
+- Features
+- Technology Stack
+- Project Structure
+- Installation Guide
+- Environment Variables
+- Running the Application
+- User Roles
+- System Workflow
+- Database Schema
+- API Documentation
+- Future Enhancements
+- Author
 
 ---
 
+# Overview
+
+VisitorPass is a full-stack Visitor Management System developed using the MERN Stack.
+
+The application digitizes the complete visitor entry process inside an organization.
+
+Instead of maintaining manual visitor registers, visitors can register online, generate a QR-based visitor pass, receive approval from administrators, and check in/check out through the security department using QR code scanning.
+
+The system also includes complaint management, employee approval workflow, dashboard analytics, reports, Excel export, pagination, searching, authentication, authorization, and role-based access control.
+
+---
+
+# Features
+
+## Visitor Module
+
+- Visitor Registration
+- QR Pass Generation
+- Visitor Approval Status
+- Complaint Registration
+- Visit History
+- Profile Management
+- QR Expiry Validation
+
+---
+
+## Admin Module
+
+- Secure Login
+- Dashboard
+- Visitor Approval
+- Visitor Rejection
+- Complaint Management
+- Employee Approval
+- Reports Dashboard
+- Search Visitors
+- Search Complaints
+- Pagination
+- Excel Report Export
+
+---
+
+## Employee Module
+
+- Employee Registration
+- Employee Login
+- Admin Approval Required
+- Employee Dashboard
+- Statistics Dashboard
+
+---
+
+## Security Module
+
+- Security Login
+- QR Code Scanner
+- Visitor Check-In
+- Visitor Check-Out
+- Security Dashboard
+- Check Logs
+
+---
 
 ## Authentication
 
-The application uses JWT-based authentication.
-
-Users receive a token after successful login.
-
-Protected routes ensure:
-
-* Users can access only their dashboard, forms, and complaints.
-* Admins can access dashboard, reports, visitor management, and complaint management.
+- JWT Authentication
+- Password Hashing using bcrypt
+- Protected Routes
+- Role-Based Authorization
 
 ---
 
-## Visitor Workflow
+## Reports
 
-1. User submits a visitor request.
-2. Request is stored in MongoDB.
-3. Admin reviews the request.
-4. Admin approves or rejects the request.
-5. Approved requests generate a QR code.
-6. Visitor uses QR code for entry.
-7. Visit can be marked as completed.
-8. Expired visits automatically become inactive.
+- Total Visitors
+- Daily Visitors
+- Weekly Visitors
+- Most Common Visit Purpose
+- Most Common Complaint Type
+- Export Visitors to Excel
 
 ---
 
-## Complaint Workflow
+## Search
 
-1. User submits a complaint.
-2. Complaint status starts as Pending.
-3. Admin updates complaint to:
+Implemented Search Functionality in:
 
-   * In Progress
-   * Resolved
-4. Resolved complaints automatically close after a configured time period.
+- Visitor Dashboard
+- Employee Dashboard
+- Complaint Dashboard
+- Check Logs
 
 ---
 
-## Installation
+## Pagination
 
-### Clone Repository
+Pagination is implemented for:
 
-```bash
-git clone <repository-url>
-cd VisitorPass
+- Visitors
+- Employees
+- Complaints
+- Check Logs
+
+---
+
+# Technology Stack
+
+## Frontend
+
+- React.js
+- React Router DOM
+- Axios
+- Context API
+- HTML5
+- CSS3
+
+---
+
+## Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT
+- bcrypt
+- validator
+
+---
+
+## Third Party Libraries
+
+- EmailJS
+- QRCode
+- html5-qrcode
+- xlsx
+- chart.js
+- react-chartjs-2
+
+---
+
+# Project Structure
+
+```
+VisitorPass
+│
+├── backend
+│   ├── controllers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   ├── uploads
+│   ├── server.js
+│   └── .env
+│
+├── frontend
+│   ├── src
+│   │   ├── Authen
+│   │   ├── Components
+│   │   ├── Context
+│   │   ├── Hooks
+│   │   ├── Image
+│   │   ├── pages
+│   │   ├── QrEntry
+│   │   ├── utils
+│   │   └── api.js
+│   │
+│   └── package.json
+│
+└── README.md
 ```
 
-### Backend Setup
+---
+
+# Installation Guide
+
+## Clone Repository
+
+```bash
+git clone https://github.com/yourusername/VisitorPass.git
+```
+
+---
+
+## Backend Setup
 
 ```bash
 cd backend
 npm install
 ```
 
-Create `.env`
-
-```env
-PORT=4000
-MONGO_URI=your_mongodb_connection_string
-SECRET=your_jwt_secret
-```
-
-Start backend:
+Start backend
 
 ```bash
-npm start
+npm run dev
 ```
 
-### Frontend Setup
+---
+
+## Frontend Setup
 
 ```bash
 cd frontend
@@ -162,52 +237,343 @@ npm start
 
 ---
 
-## Environment Variables
+# Environment Variables
 
-Backend:
+Create a `.env` file inside the backend folder.
 
-```env
-PORT=
-MONGO_URI=
-SECRET=
+```
+PORT=5000
+
+MONGO_URL=Your MongoDB Connection String
+
+SECRET=Your JWT Secret
+
+EMAIL_ADMIN=Your Gmail
+
+EMAIL_PASS=Your Gmail App Password
 ```
 
 ---
 
-## Future Improvements
+# Running the Application
 
-* Email Notifications
-* SMS Notifications
-* Visitor Check-In / Check-Out System
-* Role-Based Permissions
-* PDF Visitor Pass Download
-* Dark Mode
-* Push Notifications
-* Visitor History Export
-* Analytics Dashboard Charts
+Backend
 
----
+```
+http://localhost:5000
+```
 
-## Deployment
+Frontend
 
-Frontend:
-
-* Vercel
-
-Backend:
-
-* Render
-
-Database:
-
-* MongoDB Atlas
+```
+http://localhost:3000
+```
 
 ---
 
-## Author
+# User Roles
 
-Abdul Malik
+The system supports four different user roles.
 
-B.Tech Computer Science Engineering
+## Visitor
 
-VisitorPass was developed as a full-stack MERN project to demonstrate authentication, authorization, QR-based visitor management, complaint handling, and admin dashboard functionality.
+- Register
+- Login
+- Generate QR
+- Raise Complaint
+- View Status
+
+---
+
+## Admin
+
+- Manage Visitors
+- Manage Complaints
+- Approve Employees
+- Generate Reports
+- View Logs
+
+---
+
+## Employee
+
+- Register
+- Login
+- View Dashboard
+- View Statistics
+
+---
+
+## Security
+
+- Scan QR
+- Check-In Visitors
+- Check-Out Visitors
+- View Security Statistics
+
+---
+
+# System Workflow
+
+Visitor Registration
+
+↓
+
+Admin Approval
+
+↓
+
+QR Pass Generated
+
+↓
+
+Visitor Receives QR via Email
+
+↓
+
+Security Scans QR
+
+↓
+
+Visitor Checked In
+
+↓
+
+Visitor Checked Out
+
+↓
+
+Logs Stored in Database
+
+---
+
+# Database Schema Documentation
+
+## User Collection
+
+| Field | Type | Description |
+|---------|------|------------|
+| name | String | User Name |
+| email | String | Unique Email |
+| password | String | Encrypted Password |
+| role | String | user/admin/security |
+
+---
+
+## Employee Collection
+
+| Field | Type |
+|---------|------|
+| name | String |
+| email | String |
+| password | String |
+| department | String |
+| designation | String |
+| status | Pending / Approved |
+
+---
+
+## Visitor Collection
+
+| Field | Type |
+|---------|------|
+| Name | String |
+| Email | String |
+| Phone | String |
+| Gender | String |
+| VisitDate | Date |
+| VisitTime | String |
+| Purpose | String |
+| Employee | String |
+| Status | Pending / Approved / Rejected |
+| ExpiryTime | Date |
+
+---
+
+## Complaint Collection
+
+| Field | Type |
+|---------|------|
+| Name | String |
+| Email | String |
+| ComplaintType | String |
+| Message | String |
+| Status | Pending / In Progress / Resolved |
+
+---
+
+## CheckLog Collection
+
+| Field | Type |
+|---------|------|
+| Visitor | ObjectId |
+| CheckIn | Date |
+| CheckOut | Date |
+| Status | Checked In / Checked Out |
+
+---
+
+# API Endpoint Documentation
+
+## Authentication
+
+### User Signup
+
+```
+POST /users/signup
+```
+
+### User Login
+
+```
+POST /users/login
+```
+
+---
+
+## Employee
+
+### Employee Signup
+
+```
+POST /employee/signup
+```
+
+### Employee Login
+
+```
+POST /employee/login
+```
+
+### Get Employees
+
+```
+GET /employee
+```
+
+### Approve Employee
+
+```
+PATCH /employee/:id
+```
+
+---
+
+## Visitors
+
+### Create Visitor
+
+```
+POST /visitors
+```
+
+### Get Visitors
+
+```
+GET /visitors
+```
+
+### Update Visitor
+
+```
+PATCH /visitors/:id
+```
+
+### Delete Visitor
+
+```
+DELETE /visitors/:id
+```
+
+---
+
+## Complaints
+
+### Create Complaint
+
+```
+POST /complaints
+```
+
+### Get Complaints
+
+```
+GET /complaints
+```
+
+### Update Complaint
+
+```
+PATCH /complaints/:id
+```
+
+---
+
+## Security
+
+### Scan QR
+
+```
+POST /checklog/scan
+```
+
+### Get Check Logs
+
+```
+GET /checklog/logs
+```
+
+### Security Statistics
+
+```
+GET /checklog/stats
+```
+
+---
+
+# Security Features
+
+- JWT Authentication
+- Password Encryption
+- Protected APIs
+- Role-Based Access
+- Email Verification
+- QR Expiry Validation
+
+---
+
+# Future Enhancements
+
+- Mobile Application
+- SMS Notification
+- Face Recognition
+- Visitor Photo Capture
+- Visitor Badge Printing
+- Real-time Notifications
+- Cloud Storage
+- Audit Logs
+- Multi-Organization Support
+
+---
+
+# Author
+
+**Abdul Malik**
+
+B.Tech Computer Science & Engineering
+
+Full Stack MERN Developer
+
+LinkedIn:
+https://linkedin.com/in/your-link
+
+GitHub:
+https://github.com/your-github
+
+---
+
+## License
+
+This project is developed for educational and learning purposes.
+
+© 2026 Abdul Malik. All Rights Reserved.
