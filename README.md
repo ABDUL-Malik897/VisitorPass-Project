@@ -565,10 +565,10 @@ B.Tech Computer Science & Engineering
 Full Stack MERN Developer
 
 LinkedIn:
-https://linkedin.com/in/your-link
+[https://linkedin.com/in/your-link](https://www.linkedin.com/in/abdul-malik2004/)
 
 GitHub:
-https://github.com/your-github
+[https://github.com/your-github](https://github.com/ABDUL-Malik897)
 
 ---
 
