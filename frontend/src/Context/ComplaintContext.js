@@ -1,5 +1,7 @@
 import { createContext, useReducer , useEffect } from "react";
 import api from '../api'
+import { useAuthContext } from "../Hooks/useAuthContext";
+
 
 export const ComplaintContext  = createContext()
 
@@ -28,7 +30,9 @@ export const ComplaintContextProvider = ({children}) => {
     const [state , dispatch]  = useReducer(
         complaintReducer,{complaints:[]}
     )
+    const { user } = useAuthContext()
     useEffect(() => {
+        if (!user) return        
         const fetchComplaints = async () => {
             try {
                 const response = await api.get("/complaints");
@@ -38,12 +42,12 @@ export const ComplaintContextProvider = ({children}) => {
                     payload: response.data
                 });
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         };
 
         fetchComplaints();
-    }, []);
+    }, [user]);
     return (
         <ComplaintContext.Provider value={{...state, dispatch}}>
             {children}

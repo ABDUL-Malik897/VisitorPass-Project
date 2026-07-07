@@ -12,6 +12,10 @@ const visitorSchema = new Schema({
         type : Number,
         required : true
     },
+    Employee: {
+        type: String,
+        required: true
+    },
     Email : {
         type : String,
         required :  true
@@ -39,6 +43,10 @@ const visitorSchema = new Schema({
     VisitEnd :{
         type :Boolean,
         default: false
+    },
+    Photo : {
+        type : String,
+        default : ""
     }
 },{timestamps : true})
 

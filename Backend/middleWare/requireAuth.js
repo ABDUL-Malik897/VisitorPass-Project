@@ -16,15 +16,17 @@ const requireAuth = async (req,res,next)=>{
     const token = authorization.split(' ')[1]
 
     try{
+        // console.log("Decoded ID:", _id);
         const {_id} = jwt.verify(token , process.env.SECRET)
 
-        req.user = await User.findOne({_id}).select('_id') 
-
+        req.user = await User.findById(_id) 
+    // console.log("User:", req.user);
         next()
 
 
     }catch(error){
-        console.log(error);
+        console.error(error);
+        // console.error("JWT Error:", error);
         res.status(401).json({error : "Reqest is not authorised"})
         
     }

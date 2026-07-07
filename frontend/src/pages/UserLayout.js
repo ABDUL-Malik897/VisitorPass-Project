@@ -7,6 +7,9 @@ import api from '../api';
 import QRCode from 'react-qr-code'
 import "../index.css"
 import {format} from "date-fns"
+import genPDF from '../utils/genPDF'
+// import avatar from "../Image/1783173637594_836340575.png";
+
 
 
 const UserLayout = ({ showProfile ,setShowProfile}) => {
@@ -17,18 +20,17 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
     const { visitors , dispatch : visitorDispatch } = useVisitorsContext()
     const { complaints  , dispatch : complaintDispatch } = useComplaintContext()
     const navigate = useNavigate()
+    // const [selectedImage, setSelectedImage] = useState(null);
 
 
-    const currentVisitor = visitors?.filter((v) => v.Email === user?.email && !v.VisitEnd && ( v.Status === "Pending" || v.Status === "Approved" || v.Status === "Rejected"))?.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))[0]
-
-    const currentComplaint = complaints?.filter((v) => v.Email === user?.email)?.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))[0]
-
-    const complaintExpired = currentComplaint?.ResolvedAt && (new Date() - new Date(currentComplaint.ResolvedAt)) > (60 * 60 * 1000)
+    const curr_visitor = visitors?.filter((v) => v.Email === user?.email && !v.VisitEnd && ( v.Status === "Pending" || v.Status === "Approved" || v.Status === "Rejected"))?.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))[0]
+    const curr_complaint = complaints?.filter((v) => v.Email === user?.email)?.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))[0]
+    const complaint_expired = curr_complaint?.ResolvedAt && (new Date() - new Date(curr_complaint.ResolvedAt)) > (60 * 60 * 1000)
 
     let isExpired = false;
-    if (currentVisitor) {
-        const endTime = currentVisitor.VisitTime.split("-")[1].trim();
-        const expiryDate = new Date(currentVisitor.VisitDate);
+    if (curr_visitor) {
+        const endTime = curr_visitor.VisitTime.split("-")[1].trim();
+        const expiryDate = new Date(curr_visitor.VisitDate);
         let hour = parseInt(endTime.split(":")[0]);
         const minute = parseInt(endTime.split(":")[1]);
         const ampm = endTime.split(" ")[1];
@@ -44,9 +46,10 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
     const myVisits = visitors?.filter((v) =>v.Email === user?.email)
     const myComplaints = complaints?.filter((c) =>c.Email === user?.email)
 
-    const filteredVisits = myVisits?.filter((visit) =>visit.Purpose?.toLowerCase().includes(visitSearch.toLowerCase()) || visit.Status?.toLowerCase().includes(visitSearch.toLowerCase()) ||  visit.VisitDate?.includes(visitSearch))
+    const filtering_visits = myVisits?.filter((visit) =>visit.Purpose?.toLowerCase().includes(visitSearch.toLowerCase()) || visit.Status?.toLowerCase().includes(visitSearch.toLowerCase()) ||  visit.VisitDate?.includes(visitSearch))
 
     useEffect(()=>{
+        if (!user) return
         const fetchVisitors = async ()=>{
             try {
                 const response = await api.get("/visitors")
@@ -55,7 +58,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
                     payload : response.data
                 })
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 
             }
         }
@@ -67,41 +70,43 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
                     payload : response.data
                 })
             }catch(error){
-                console.log(error)
+                if (error.response?.status !== 401) {
+                    console.error(error)
+                }
             }
         }
         fetchVisitors()
         fetchComplaints()
-    }, [visitorDispatch , complaintDispatch])
+    }, [visitorDispatch , complaintDispatch , user])
 
     useEffect(()=>{
-        const closeExpiredComplaints = async () => {
-            if (currentComplaint && currentComplaint.Status ==="Resolved" && complaintExpired){
+        const close_the_expired_complaints = async () => {
+            if (curr_complaint && curr_complaint.Status ==="Resolved" && complaint_expired){
                 try{
-                    const response = await api.patch(`/complaints/${currentComplaint._id}`,{Status : "Closed"})
+                    const response = await api.patch(`/complaints/${curr_complaint._id}`,{Status : "Closed"})
                     complaintDispatch({
                         type : "UPDATE_COMPLAINT",
                         payload : response.data
                     })
                 }catch(error){
-                    console.log(error);
+                    console.error(error);
                     
                 }
             }
         }
-        closeExpiredComplaints()
-    },[currentComplaint , complaintDispatch , complaintExpired])
+        close_the_expired_complaints()
+    },[curr_complaint , complaintDispatch , complaint_expired])
 
     useEffect(()=>{
         const expireVisitor = async () =>{
             if (
-                currentVisitor && 
+                curr_visitor && 
                     (
-                        (currentVisitor.Status === "Approved" && isExpired) ||
-                        (currentVisitor.Status === "Rejected" &&(new Date() - new Date(currentVisitor.updatedAt)) > (60 * 60 * 1000))
+                        (curr_visitor.Status === "Approved" && isExpired) ||
+                        (curr_visitor.Status === "Rejected" &&(new Date() - new Date(curr_visitor.updatedAt)) > (60 * 60 * 1000))
                     )
                 ){
-                const response = await api.patch(`/visitors/${currentVisitor._id}`,{VisitEnd : true})
+                const response = await api.patch(`/visitors/complete/${curr_visitor._id}`)
                 visitorDispatch({
                     type : "UPDATE_VISITOR",
                     payload : response.data
@@ -109,7 +114,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
             }
         }
         expireVisitor()
-    },[currentVisitor , isExpired , visitorDispatch])
+    },[curr_visitor , isExpired , visitorDispatch])
     
     const handleLogout = () => {
         localStorage.removeItem("user")
@@ -120,16 +125,38 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
     const handleCompleteVisit = async () => {
         try {
             const response = await api.patch(
-                `/visitors/${currentVisitor._id}`,{VisitEnd :true}
+                `/visitors/complete/${curr_visitor._id}`
             )
             visitorDispatch({
             type: "UPDATE_VISITOR",
             payload: response.data
         })
         } catch(error) {
-            console.log(error)
+            console.error(error)
         }
     }
+
+//     const handleUpload = async () => {
+//     if (!selectedImage) return;
+//     const formData = new FormData();
+//     formData.append("profilePic", selectedImage);
+//     try {
+//         const response = await api.patch(
+//             "/users/profile-picture",
+//             formData
+//         );
+//         localStorage.setItem(
+//             "user",
+//             JSON.stringify(response.data)
+//         );
+//         dispatch({
+//             type: "LOGIN",
+//             payload: response.data
+//         });
+//     } catch (error) {
+//         console.error(error);
+//     }
+// };
 
     return (
         <>
@@ -138,35 +165,35 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
             <div className='user-panel'>
                     <h3>User Panel</h3>
                     <p className='email-address'>{user?.email}</p>
-                    <p>QR Status : <span className={currentVisitor?.Status?.toLowerCase()}>{currentVisitor?.Status || "No-Request-Yet"}</span></p>
+                    <p>QR Status : <span className={curr_visitor?.Status?.toLowerCase()}>{curr_visitor?.Status || "No-Request-Yet"}</span></p>
                     {
-                        currentVisitor?.Status ==="Pending" &&
+                        curr_visitor?.Status ==="Pending" &&
                         <div>
                             <p>Your request has been sent to admin</p> 
                             <p>Please wait for approval</p>
                         </div>
                     }
                     {
-                        currentVisitor?.Status === "Approved" && !isExpired &&(
+                        curr_visitor?.Status === "Approved" && !isExpired &&(
                             <div className='qr-card'>
                                 <p>Adimn Approved your request</p>
-                                <p>Visit Date : <span>{" "}{format(new Date(currentVisitor.VisitDate),"dd-MM-yyyy")}</span></p>
+                                <p>Visit Date : <span>{" "}{format(new Date(curr_visitor.VisitDate),"dd-MM-yyyy")}</span></p>
                                 <div className='qr-box'>
                                     <QRCode
-                                        value={`
-                                        Name: ${currentVisitor?.Name}
-                                        Email: ${currentVisitor?.Email}
-                                        Purpose: ${currentVisitor?.Purpose}
-                                        Status: ${currentVisitor?.Status}
-                                        `}
-                                        size={150}
+                                        value={JSON.stringify({visitorId : curr_visitor._id})}
+                                        size={180}
                                         />
                                 </div>
-                                <p>Visit Slot : <span>{currentVisitor?.VisitTime}</span></p>
+                                <p>Visit Slot : <span>{curr_visitor?.VisitTime}</span></p>
                                 <button 
                                 className="complete"
                                 onClick={handleCompleteVisit}>
                                     Complete Visit
+                                </button>
+                                <button
+                                className='complete'
+                                onClick={() => genPDF(curr_visitor)}>
+                                    Download this in PDF
                                 </button>
                             </div>
                         )
@@ -180,7 +207,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
                         )
                     }
                     {
-                        currentVisitor?.Status === "Rejected" &&
+                        curr_visitor?.Status === "Rejected" &&
                         (
                             <div>
                                 <p>Your request was rejected</p>
@@ -191,15 +218,15 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
                         complaints && 
                         (
                             <p>
-                            Complaint Status : <span className={currentComplaint?.Status?.toLowerCase()}>{
-                                complaintExpired ? "No-Complaint-Yet" :
-                            currentComplaint?.Status || "No-Complaint-Yet"
+                            Complaint Status : <span className={curr_complaint?.Status?.toLowerCase()}>{
+                                complaint_expired ? "No-Complaint-Yet" :
+                            curr_complaint?.Status || "No-Complaint-Yet"
                             }</span>
                             </p>
                         )
                     }
                     {
-                        currentComplaint?.Status === "Resolved" &&
+                        curr_complaint?.Status === "Resolved" &&
                         (
                             <div>
                                 <p>Your complaint was resolved.</p>
@@ -207,7 +234,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
                         )
                     }
                     {
-                        currentComplaint?.Status === "In-Progress" &&
+                        curr_complaint?.Status === "In-Progress" &&
                         (
                             <div>
                                 <p>Your complaint is in progress.</p>
@@ -235,7 +262,7 @@ const UserLayout = ({ showProfile ,setShowProfile}) => {
                 </div>
                 <div className='visit-list'>
                     {
-                    filteredVisits?.map((visit) =>(
+                    filtering_visits?.map((visit) =>(
                         <div key={visit._id}>
                             <p>Date : {format(new Date(visit.VisitDate),"dd-MM-yyyy")}</p>
                             <p>Purpose : {visit.Purpose}</p>

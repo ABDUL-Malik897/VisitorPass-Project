@@ -12,27 +12,21 @@ const Admin = () => {
 
     const { dispatch : authDispatch } = useAuthContext()
     const navigate = useNavigate()
-
     const [visitSearch, setVisitSearch] = useState("")
     const [complaintSearch , setComplaintSearch] = useState("")
-    
-
-
     const { visitors } = useVisitorsContext()
     const { complaints } = useComplaintContext()
 
+
     const totalVisitors = visitors?.length || 0;
-
-
     const pendingRequests = visitors?.filter(v=> v.Status === "Pending").length || 0;
     const approvedRequests = visitors?.filter(v=> v.Status === "Approved").length || 0;
     const rejectedRequests = visitors?.filter(v=> v.Status === "Rejected").length || 0;
     const pendingComplaints = complaints?.filter(c=> c.Status === "Pending" || c.Status === " In-Progress").length || 0;
     
 
-    const filteredVisits = visitors?.filter((visit) => visit.Name?.toLowerCase().includes(visitSearch.toLowerCase()) ||  visit.Email?.toLowerCase().includes(visitSearch.toLowerCase()) || visit.Purpose?.toLowerCase().includes(visitSearch.toLowerCase()) || visit.Status?.toLowerCase().includes(visitSearch.toLowerCase()))
-
-    const filteredComplaints = complaints?.filter((complaint) => complaint.ComplaintType?.toLowerCase().includes(complaintSearch.toLowerCase()) || complaint.Message?.toLowerCase().includes(complaintSearch.toLowerCase()) ||complaint.Status?.toLowerCase().includes(complaintSearch.toLowerCase()))
+    const filtering_visits = visitors?.filter((visit) => visit.Name?.toLowerCase().includes(visitSearch.toLowerCase()) ||  visit.Email?.toLowerCase().includes(visitSearch.toLowerCase()) || visit.Purpose?.toLowerCase().includes(visitSearch.toLowerCase()) || visit.Status?.toLowerCase().includes(visitSearch.toLowerCase()))
+    const filtering_complaints = complaints?.filter((complaint) => complaint.ComplaintType?.toLowerCase().includes(complaintSearch.toLowerCase()) || complaint.Message?.toLowerCase().includes(complaintSearch.toLowerCase()) ||complaint.Status?.toLowerCase().includes(complaintSearch.toLowerCase()))
 
     const handleLogout = () => {
     localStorage.removeItem("user")
@@ -63,6 +57,7 @@ const Admin = () => {
                 <table border ="5">
                 <thead>
                     <tr>
+                        <th>Photo</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Purpose</th>
@@ -70,8 +65,18 @@ const Admin = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredVisits?.map((visitor)=>(
+                    {filtering_visits?.map((visitor)=>(
                         <tr key={visitor._id}>
+                            <td><img
+                            src={`http://localhost:5000/upload/${visitor.Photo}`}
+                            alt={visitor.Name}
+                            width="70"
+                            height="70"
+                            style={{
+                                bjectFit:"cover",
+                                borderRadius:"50%"
+                            }}
+                            /></td>
                             <td>{visitor.Name}</td>
                             <td>{visitor.Email}</td>
                             <td>{visitor.Purpose}</td>
@@ -103,7 +108,7 @@ const Admin = () => {
                 </thead>
                 <tbody>
                     {
-                        filteredComplaints?.map((complaint)=>(
+                        filtering_complaints?.map((complaint)=>(
                             <tr key={complaint._id}>
                         <td>{complaint.ComplaintType}</td>
                         <td>{complaint.Message}</td>

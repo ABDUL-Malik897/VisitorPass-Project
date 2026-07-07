@@ -1,9 +1,11 @@
 const express = require('express');
+const requireAuth = require('../middleWare/requireAuth');
+
 const { getallComplaints, updateComplaint, createComplaint, deleteComplaint } = require('../controllers/Complaint-controller');
 
 const router = express.Router()
 
-
+router.use(requireAuth)
 
 router.get("/",getallComplaints)
 

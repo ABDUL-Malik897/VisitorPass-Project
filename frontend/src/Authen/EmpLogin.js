@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../Hooks/useAuthContext'
 
 
-const Login = () => {
+const EmpLogin = () => {
 
     const {dispatch} = useAuthContext()
     const [email , setEmail] = useState('')
@@ -18,7 +18,7 @@ const Login = () => {
         e.preventDefault()
 
         try{
-            const response = await api.post("/users/login",{
+            const response = await api.post("/employee/login",{
                 email,
                 password
             })
@@ -32,10 +32,10 @@ const Login = () => {
                 payload: response.data
             })
 
-            navigate("/userlayout")
+            navigate("/employee-profile")
             
         }catch(error){
-            setError(error.response.data.error)
+            setError(error.response?.data?.error || "Login Failed")
         }
     }
 
@@ -48,7 +48,7 @@ const Login = () => {
             <button onClick={handleback} className='Back'><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill=" rgb(0, 153, 255)"><path d="m330-444 201 201-51 51-288-288 288-288 51 51-201 201h438v72H330Z"/></svg></button> 
             <div className='center'>
         <div className='login'>
-            <h2>Login</h2>
+            <h2>Employee-Login</h2>
             <span>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</span>
             <form onSubmit={handleSubmit}>
                 <label>Email</label>
@@ -77,9 +77,9 @@ const Login = () => {
             {
                 error && <p className='error'>{error}</p>
             }
-            <p> Don't Have an account
+            <p> Didn't Approved  
                 <span>
-                <Link to='/signup'>
+                <Link to='/employee-signup'>
                     <button type='button' className='last'>Signup</button>
                 </Link>
                 </span>
@@ -90,4 +90,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default EmpLogin

@@ -21,8 +21,9 @@ const loginUser = async (req,res) =>{
         res.status(200).json({
             name : user.name,
             email : user.email,
-            token,
-            role : user.role
+            role : user.role,
+            profilePic: user.profilePic,
+            token
         })
     }catch(error){
         res.status(400).json({error : error.message})
@@ -46,13 +47,47 @@ const signupUser = async (req,res) =>{
         res.status(200).json({
             name : user.name,
             email : user.email,
-            token,
-            role : user.role
+            role : user.role,
+            profilePic: user.profilePic,
+            token
         })
     }catch(error){
         res.status(400).json({error : error.message})
     }
 }
+
+// const updateProfilePic = async (req, res) => {
+//     try {
+
+//         // console.log("Controller reached");
+//         // console.log(req.file);
+
+//         const user = await User.findByIdAndUpdate(
+//             req.user._id,
+//             {
+//                 profilePic: `/upload/profilePics/${req.file.filename}`
+//             },
+//             { new: true }
+//         );
+
+//         // console.log(user);
+
+//         res.json({
+//             name: user.name,
+//             email: user.email,
+//             role: user.role,
+//             profilePic: user.profilePic,
+//             token
+//         });
+
+//     } catch (error) {
+//         console.error("UPLOAD ERROR:", error);
+
+//         res.status(500).json({
+//             error: error.message
+//         });
+//     }
+// };
 
 
 module.exports = {

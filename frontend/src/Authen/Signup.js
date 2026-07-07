@@ -17,7 +17,7 @@ const Signup = () => {
         e.preventDefault()
         try{
             const response = await api.post('/users/signup',{name,email,password})
-            console.log(response.data);
+            console.error(response.data);
             localStorage.setItem(
                 "user", 
                 JSON.stringify(response.data)
@@ -67,7 +67,7 @@ const Signup = () => {
                         {showPass ? "Hide" : "See"}
                     </button>
                 </div>
-                <button type='submit' className='form-submit'>Submit </button>
+                <button type='submit' className='form-submit'>Submit</button>
             </form>
             {
                 error && <p className='error'>{error}</p>

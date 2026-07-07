@@ -14,6 +14,15 @@ import { useState } from "react";
 import Admin from "./pages/Admin";
 import Report from "./Components/Report";
 import QrForm from "./QrEntry/QrForm";
+import ScanQr from "./Components/ScanQr";
+import CheckLogs from "./Components/CheckLogs";
+import Security from "./pages/Security";
+import EmpSignup from "./Authen/EmpSignup";
+// import EmployeePortal from "./pages/Employee";
+import EmpLogin from "./Authen/EmpLogin";
+import EmployeeDashboard from "./Components/EmployeeDashboard";
+import EmployeeLayout from "./pages/EmpLayout";
+import EmpStats from "./Components/Empstats";
 
 
 
@@ -35,9 +44,12 @@ function App() {
               <Section />
             ) : user.role === "admin" ? (
               <Navigate to="/admin" replace/>
-            ) : (
+            ) : user.role === "security" ? (
+              <Navigate to="/security" replace/>
+            ) : user.role === "employee" ? (
+              <Navigate to="/employee-profile" replace/>
+            ) :
               <Navigate to="/userlayout" replace/>
-            )
           }/>
 
           <Route path="/login" element={
@@ -46,9 +58,10 @@ function App() {
                 : 
               user.role === "admin" ? (
               <Navigate to="/admin" replace/>
-            ) : (
+            ) : user.role === "security" ? (
+              <Navigate to="/security" replace/>
+            ) :
               <Navigate to="/userlayout" replace/>
-            )
           }/>
 
           <Route path="/signup" element={
@@ -61,7 +74,7 @@ function App() {
             <Route
               path="/userlayout"
               element={
-                user && user.role !== "admin" ? (
+                user && user?.role === "user" ? (
                   <UserLayout 
                     showProfile={showProfile}
                     setShowProfile={setShowProfile}
@@ -73,7 +86,7 @@ function App() {
             />
 
             <Route path="/form" element={
-                user && user.role !== "admin" ? (
+                user && user?.role === "user" ? (
                   <QrForm />
                 ) : (
                   <Navigate to="/login" replace />
@@ -132,6 +145,85 @@ function App() {
                 )
               }
             />
+
+            <Route path="/checklog" element={
+                user?.role === "admin" ? (
+                  <CheckLogs />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+
+            <Route
+              path="/security"
+              element={
+                user && user?.role === "security" ? (
+                  <Security 
+                    showProfile={showProfile}
+                    setShowProfile={setShowProfile}
+                  />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+              />
+
+            <Route path="/scan" element={
+              user?.role === "security" ? (
+                <ScanQr />
+              ) : (
+                <Navigate to='/login' replace/>
+              )
+            }
+            />
+
+            <Route path="/employee-portal"
+              element={
+              user && user.role === "employee" ? <EmpLogin /> : <EmpSignup/>}
+          />
+
+
+            <Route 
+            path="/employee-signup"
+            element={<EmpSignup />}
+            />
+
+            <Route 
+            path="/employee-login"
+            element={!user
+            ? <EmpLogin />
+            : <Navigate to="/employee-profile" replace/>}
+            />
+
+            <Route
+              path="/employee-dashboard"
+              element={
+                user?.role === "admin"
+                ? <EmployeeDashboard />
+                : <Navigate to="/login" replace />
+              }
+            />
+
+            <Route
+              path="/employee-profile"
+              element={
+                user?.role === "employee"
+                ? <EmployeeLayout 
+                showProfile={showProfile}
+                setShowProfile={setShowProfile}/>
+                : <Navigate to="/employee-login" replace />
+              }
+              />
+
+              <Route
+                path="/emp-stats"
+                element={
+                  user?.role === "employee"
+                  ? <EmpStats />
+                  : <Navigate to="/employee-login" replace />
+                }
+              />
 
             {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
           

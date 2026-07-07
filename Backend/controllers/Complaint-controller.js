@@ -27,7 +27,7 @@ exports.createComplaint = async (req,res) => {
     
     
     if (emptyFields.length > 0){
-        return res.status(400).json({ error : `${emptyFields} is required`})
+        return res.status(400).json({ error : `${emptyFields.join(', ')} is required`})
     }
     try {
         const complaint = await Complaint.create({ Name , Email , ComplaintType , Message })

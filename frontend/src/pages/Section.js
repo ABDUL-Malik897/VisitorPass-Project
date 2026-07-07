@@ -1,8 +1,14 @@
 import React  from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Image from '../Image/Screenshot 2026-04-23 000604.png';
 
+
 const Section = () => {
+    const navigate = useNavigate()
+
+    const employeeportal = () => {
+        navigate("/employee-portal")
+    }
     return (
         <div className='sections'>
             <div className='main-page'id='home'>
@@ -22,6 +28,7 @@ const Section = () => {
                 <Link to="/login">
                     <button className='c'>Visitor Registration</button>
                 </Link>
+                <button className='b'onClick={employeeportal}>Employee Portal</button>
             </div>
             <div className='section-2' id='features'>
                 <h2>Feature</h2>

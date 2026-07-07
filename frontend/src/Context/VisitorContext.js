@@ -1,5 +1,7 @@
 import api from '../api';
+import { useAuthContext } from "../Hooks/useAuthContext";
 const { createContext, useReducer, useEffect } = require("react");
+
 
 
 export const VisitorContext = createContext()
@@ -32,15 +34,16 @@ export const VisitorsReducer = (state , action) =>{
     }
 } 
 
-
-
 export const VisitorContextProvider = ({children}) =>{
 
     const [state , dispatch] = useReducer(VisitorsReducer , {
         visitors : null
     })
 
+    const  { user } = useAuthContext()
+
     useEffect(() => {
+        if (!user) return;
         const fetchVisitors = async () => {
             try {
                 const response = await api.get("/visitors")
@@ -49,11 +52,13 @@ export const VisitorContextProvider = ({children}) =>{
                     payload: response.data
                 })
             } catch (error) {
-                console.log(error)
+                if (error.response?.status !== 401) {
+                    console.error(error)
+                }
             }
         }
         fetchVisitors()
-    }, [])
+    }, [user])
 
     return(
         <VisitorContext.Provider value={{...state, dispatch}}>

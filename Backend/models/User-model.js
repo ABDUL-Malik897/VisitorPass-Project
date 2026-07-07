@@ -47,14 +47,8 @@ userSchema.statics.signup = async function (name, email, password) {
 
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
-    
-    let role = "user"
-    if(email === "malikabdulxd@gmail.com"){
-        role = "admin"
-    }
 
-    const user = await this.create({name ,email , password : hash , role})
-
+    const user = await this.create({name ,email , password : hash , role : 'user'})
 
     return user
 }
