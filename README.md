@@ -1,7 +1,7 @@
 # VisitorPass – Smart Visitor Management System
 
 <p align="center">
-  <img src="frontend/src/Image/VisitorPass-logo.png" alt="VisitorPass Logo" width="180"/>
+  <img src="frontend/src/Image/Screenshot 2026-04-23 000604.png" alt="VisitorPass Logo" width="180"/>
 </p>
 
 <p align="center">
